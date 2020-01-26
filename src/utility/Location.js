@@ -1,4 +1,4 @@
-const GOOGLE_API_KEY = 'AIzaSyA6lOJ-C5U-26fskYTxFR9KSyYTZz4_X5w';
+import { GOOGLE_API_KEY } from './GOOGLE-API-KEY';
 
 export async function getCoordinates(address) {
   const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(address)}&key=${GOOGLE_API_KEY}`;
@@ -12,7 +12,7 @@ export async function getCoordinates(address) {
    *  error_message?: string,
    *  results: {geometry: {location}}[]
    * }}
-  */
+   */
   const data = await response.json();
   if (data.error_message) {
     throw new Error(data.error_message);
