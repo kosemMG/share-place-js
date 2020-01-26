@@ -2,6 +2,7 @@ import { Coordinates } from './utility/Coordinates';
 import { Modal } from './ui/Modal';
 import { Map } from './ui/Map';
 import { getCoordinates, getAddress } from './utility/Location';
+import { POST_URL } from './utility/urls';
 
 class PlaceFinder {
   constructor() {
@@ -57,9 +58,20 @@ class PlaceFinder {
     } else {
       this.map = new Map(coordinates);
     }
-    this.shareButton.disabled = false;
-    // const sharedLinkInput = document.getElementById('share-link');
-    this.sharedLinkInput.value = `${location.origin}/my-place?address=${encodeURI(address)}&lat=${coordinates.lat}&lng=${coordinates.lng}`;
+
+    fetch(POST_URL, {
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+      body: JSON.stringify({
+        address: address,
+        lat: coordinates.lat,
+        lng: coordinates.lng
+      })
+    }).then(response => response.json())
+      .then(data => {
+        this.shareButton.disabled = false;
+        this.sharedLinkInput.value = `${location.origin}/my-place?locationId=${data.locationId}`;
+      });
   }
 
   sharePlaceHandler() {
@@ -68,8 +80,8 @@ class PlaceFinder {
       return;
     }
     navigator.clipboard.writeText(this.sharedLinkInput.value)
-             .then(() => alert('Copied to clipboard!'))
-             .catch(err => console.log(err));
+      .then(() => alert('Copied to clipboard!'))
+      .catch(err => console.log(err));
   }
 }
 
