@@ -1,3 +1,0 @@
-# Share Place JavaScript Project
-
-
